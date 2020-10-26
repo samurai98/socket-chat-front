@@ -1,4 +1,5 @@
 import io from 'socket.io-client'
+import {MessageType, UserType} from '../types/entities'
 
 
 export const api = {
@@ -6,9 +7,9 @@ export const api = {
     createConnection() {
         this.socket = io('http://samurai-chat-back.herokuapp.com/')
     },
-    subscribe(initMessagesHandler: (messages: any, fn: () => void) => void,
-              newMessageSentHandler: (message: any) => void,
-              userTypingHandler: (user: any) => void) {
+    subscribe(initMessagesHandler: (messages: Array<MessageType>, fn: () => void) => void,
+              newMessageSentHandler: (message: MessageType) => void,
+              userTypingHandler: (user: UserType) => void) {
         this.socket?.on('init-messages-published', initMessagesHandler)
         this.socket?.on('new-message-sent', newMessageSentHandler)
         this.socket?.on('user-typing', userTypingHandler)
@@ -18,7 +19,7 @@ export const api = {
     },
     sendMessage(message: string) {
         this.socket?.emit('client-message-sent', message, (error: string) => {
-            if(error) alert(error)
+            if (error) alert(error)
         })
     },
     typeMessage() {
